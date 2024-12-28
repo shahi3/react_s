@@ -1,59 +1,66 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+
 function Textform(props) {
-    const [text , settext] = useState('enter text here')
-    const handleupclick  = ()=>{
-        let newtext=text.toUpperCase();
-        settext(newtext)
-        
-    }
-    const handleloclick  = ()=>{
-      let newtext=text.toLocaleLowerCase();
-      settext(newtext)
-      
-  }
-  const clear  = ()=>{
-    let newtext='';
-    settext(newtext)
-    
-}
-const coppy =()=>{
-  navigator.clipboard.writeText(text)
+    const [text, setText] = useState('Enter text here');
 
-}
-const space=()=>{
-  let newtext = text.trim().replace(/\s+/g, ' ');
-  settext(newtext)
-}
-    const handleonchange  = (event)=>{
-       settext(event.target.value)
-        
-    }
-    
-  return (
-    < >
-    <div>
-        <h1>{props.text}</h1>
-        <div className="mb-3 ">
-        <textarea className="form-control " id="mybox" rows="8"value={text} onChange={handleonchange} ></textarea>
-        </div>
-        <button className="btn btn-primary mb-3 mx-2"onClick={handleupclick}>convert to upper case</button>
-        <button className="btn btn-primary mb-2 mx-2"onClick={handleloclick}>convert to upper case</button>
-        <button className="btn btn-primary mb-2 mx-2"onClick={clear}>clear text</button>
-        <button className="btn btn-primary mb-2 mx-2"onClick={coppy}>coppy text</button>
-        <button className="btn btn-primary mb-2 mx-2"onClick={space}>remove extra spaces</button>
+    const handleUpClick = () => {
+        setText(text.toUpperCase());
+        props.showalert("Converted to uppercase", "success");
+    };
 
+    const handleLoClick = () => {
+        setText(text.toLowerCase());
+        props.showalert("Converted to lowercase", "success");
+    };
 
+    const handleClear = () => {
+        setText('');
+        props.showalert("Text cleared", "success");
+    };
 
-    </div>
-    <div className="container2">
-      <p>{text.length} is the length of the text</p>
-      <p>{0.008 * (text.split(" ").length-1)} mitutes to read</p>
-      <p>{text.split(" ").length-1} word in the text</p>
-      <h2>preview</h2>
-      <p>{text}</p>
-    </div>
-    </>
-  )
+    const handleCopy = () => {
+        navigator.clipboard.writeText(text);
+        props.showalert("Text copied to clipboard", "success");
+    };
+
+    const handleRemoveSpaces = () => {
+        setText(text.trim().replace(/\s+/g, ' '));
+        props.showalert("Extra spaces removed", "success");
+    };
+
+    const handleOnChange = (event) => {
+        setText(event.target.value);
+    };
+
+    return (
+        <>
+            <div className="container">
+                <h1>{props.text}</h1>
+                <textarea
+                    className="form-control"
+                    style={{
+                        backgroundColor: props.mode === 'light' ? 'white' : 'black',
+                        color: props.mode === 'light' ? 'black' : 'white',
+                    }}
+                    rows="8"
+                    value={text}
+                    onChange={handleOnChange}
+                />
+                <button className="btn btn-primary mx-2 my-2" onClick={handleUpClick}>Convert to Uppercase</button>
+                <button className="btn btn-primary mx-2 my-2" onClick={handleLoClick}>Convert to Lowercase</button>
+                <button className="btn btn-primary mx-2 my-2" onClick={handleClear}>Clear Text</button>
+                <button className="btn btn-primary mx-2 my-2" onClick={handleCopy}>Copy Text</button>
+                <button className="btn btn-primary mx-2 my-2" onClick={handleRemoveSpaces}>Remove Extra Spaces</button>
+            </div>
+            <div className="container" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>
+                <p>{text.length} characters</p>
+                <p>{0.008 * text.split(/\s+/).filter(word => word.length).length} minutes to read</p>
+                <p>{text.split(/\s+/).filter(word => word.length).length} words</p>
+                <h2>Preview</h2>
+                <p>{text.length > 0 ? text : 'Enter something to preview here'}</p>
+            </div>
+        </>
+    );
 }
 
 export default Textform;
